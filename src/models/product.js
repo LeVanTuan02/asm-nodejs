@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, ObjectId } from "mongoose";
 
 const productSchema = new Schema({
     name: {
@@ -28,6 +28,16 @@ const productSchema = new Schema({
         default: 0,
     },
     categoryId: {
-        
+        type: ObjectId,
+        ref: "Category",
+        required: true,
+    },
+    slug: {
+        type: String,
+        required: true,
+        unique: true,
+        lowercase: true,
     }
-});
+}, { timestamps: true });
+
+export default model("Product", productSchema);
