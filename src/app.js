@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import mongoose from 'mongoose';
 
 // routes
+import categoryRouter from "./routes/category";
 
 const app = express();
 
@@ -11,6 +12,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(morgan('tiny'));
+
+app.use("/api", categoryRouter);
 
 // connect db
 mongoose.connect("mongodb://localhost:27017/asm-nodejs")

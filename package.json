@@ -16,7 +16,8 @@
     "babel-preset-stage-0": "^6.24.1",
     "cors": "^2.8.5",
     "express": "^4.17.3",
-    "mongoose": "^6.2.8"
+    "mongoose": "^6.2.8",
+    "slugify": "^1.6.5"
   },
   "devDependencies": {
     "morgan": "^1.10.0",
