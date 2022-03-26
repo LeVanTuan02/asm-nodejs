@@ -43,7 +43,10 @@ export const list = async (req, res) => {
 
 export const update = async (req, res) => {
     const filter = { _id: req.params.id };
-    const update = req.body;
+    const update = {
+        ...req.body,
+        slug: slugify(req.body.name)
+    };
     const options = { new: true };
 
     try {

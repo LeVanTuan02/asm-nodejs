@@ -10,6 +10,7 @@ import sliderRouter from "./routes/slider";
 import sizeRouter from "./routes/size";
 import toppingRouter from "./routes/topping";
 import storeRouter from "./routes/store";
+import voucherRouter from "./routes/voucher";
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use("/api", sliderRouter);
 app.use("/api", sizeRouter);
 app.use("/api", toppingRouter);
 app.use("/api", storeRouter);
+app.use("/api", voucherRouter);
 
 // connect db
 mongoose.connect("mongodb://localhost:27017/asm-nodejs")
