@@ -9,6 +9,7 @@ import productRouter from "./routes/product";
 import sliderRouter from "./routes/slider";
 import sizeRouter from "./routes/size";
 import toppingRouter from "./routes/topping";
+import storeRouter from "./routes/store";
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use("/api", productRouter);
 app.use("/api", sliderRouter);
 app.use("/api", sizeRouter);
 app.use("/api", toppingRouter);
+app.use("/api", storeRouter);
 
 // connect db
 mongoose.connect("mongodb://localhost:27017/asm-nodejs")
