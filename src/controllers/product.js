@@ -30,8 +30,20 @@ export const read = async (req, res) => {
 };
 
 export const list = async (req, res) => {
+    const populate = req.query["_expand"];
+
+    let sortOpt = {};
+    if (req.query["_sort"]) {
+        const sortArr = req.query["_sort"].split(",");
+        const orderArr = (req.query["_order"] || "").split(",");
+        
+        sortArr.forEach((sort, index) => {
+            sortOpt[sort] = orderArr[index] === "desc" ? -1 : 1;
+        });
+    }
+
     try {
-        const products = await Product.find({}).select("-__v").exec();
+        const products = await Product.find({}).select("-__v").populate(populate).sort(sortOpt).exec();
         res.json(products);
     } catch (error) {
         res.status(400).json({
@@ -43,7 +55,10 @@ export const list = async (req, res) => {
 
 export const update = async (req, res) => {
     const filter = { _id: req.params.id };
-    const update = req.body;
+    const update = {
+        ...req.body,
+        slug: slugify(req.body.name)
+    };
     const options = { new: true };
 
     try {
