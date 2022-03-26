@@ -6,6 +6,7 @@ import mongoose from 'mongoose';
 // routes
 import categoryRouter from "./routes/category";
 import productRouter from "./routes/product";
+import sliderRouter from "./routes/slider";
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(morgan('tiny'));
 
 app.use("/api", categoryRouter);
 app.use("/api", productRouter);
+app.use("/api", sliderRouter);
 
 // connect db
 mongoose.connect("mongodb://localhost:27017/asm-nodejs")
