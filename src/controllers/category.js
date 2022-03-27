@@ -30,8 +30,18 @@ export const read = async (req, res) => {
 };
 
 export const list = async (req, res) => {
+    let sortOpt = {};
+    if (req.query["_sort"]) {
+        const sortArr = req.query["_sort"].split(",");
+        const orderArr = (req.query["_order"] || "").split(",");
+        
+        sortArr.forEach((sort, index) => {
+            sortOpt[sort] = orderArr[index] === "desc" ? -1 : 1;
+        });
+    }
+
     try {
-        const categories = await CategoryModel.find({}).select("-__v").exec();
+        const categories = await CategoryModel.find({}).select("-__v").sort(sortOpt).exec();
         res.json(categories);
     } catch (error) {
         res.status(400).json({
