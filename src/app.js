@@ -12,6 +12,7 @@ import toppingRouter from "./routes/topping";
 import storeRouter from "./routes/store";
 import voucherRouter from "./routes/voucher";
 import cateNewsRouter from "./routes/cateNews";
+import newsRouter from "./routes/news";
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use("/api", toppingRouter);
 app.use("/api", storeRouter);
 app.use("/api", voucherRouter);
 app.use("/api", cateNewsRouter);
+app.use("/api", newsRouter);
 
 // connect db
 mongoose.connect("mongodb://localhost:27017/asm-nodejs")
