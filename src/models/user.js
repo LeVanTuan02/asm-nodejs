@@ -47,6 +47,7 @@ const userSchema = new Schema({
     },
     avatar: {
         type: String,
+        default: "https://res.cloudinary.com/levantuan/image/upload/v1644302455/assignment-js/thumbnail-image-vector-graphic-vector-id1147544807_ochvyr.jpg"
     },
     role: {
         type: Number,
@@ -59,6 +60,9 @@ const userSchema = new Schema({
 }, { timestamps: true });
 
 userSchema.methods = {
+    authenticate(password) {
+        return this.password === this.encryptPassword(password);
+    },
     encryptPassword(password) {
         if (!password) return;
         try {
