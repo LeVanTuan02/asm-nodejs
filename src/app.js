@@ -14,6 +14,7 @@ import voucherRouter from "./routes/voucher";
 import cateNewsRouter from "./routes/cateNews";
 import newsRouter from "./routes/news";
 import contactRouter from "./routes/contact";
+import userRouter from "./routes/users";
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use("/api", voucherRouter);
 app.use("/api", cateNewsRouter);
 app.use("/api", newsRouter);
 app.use("/api", contactRouter);
+app.use("/api", userRouter);
 
 // connect db
 mongoose.connect("mongodb://localhost:27017/asm-nodejs")
