@@ -5,7 +5,7 @@ import { isAdmin, isAuth, requireSignin } from "../middlewares/checkAuth";
 
 const router = Router();
 
-router.post("/contact/:userId", requireSignin, isAuth, isAdmin, create);
+router.post("/contact", create);
 router.get("/contact/:id", read);
 router.get("/contact", list);
 router.put("/contact/:id/:userId", requireSignin, isAuth, isAdmin, update);
