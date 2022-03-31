@@ -18,8 +18,10 @@ export const create = async (req, res) => {
 export const read = async (req, res) => {
     const filter = { slug: req.params.slug };
 
+    const populate = req.query["_expand"];
+
     try {
-        const news = await News.findOne(filter).select("-__v").exec();
+        const news = await News.findOne(filter).select("-__v").populate(populate).exec();
         res.json(news);
     } catch (error) {
         res.status(400).json({
@@ -30,6 +32,20 @@ export const read = async (req, res) => {
 };
 
 export const list = async (req, res) => {
+    const filter = {};
+
+    const neArr = [];
+
+    const { _expand, _sort, _order, ...query } = req.query;
+    const queryArr = Object.keys(query);
+    queryArr.forEach(item => {
+        if (!item.includes("_ne")) {
+            filter[item] = query[item];
+        } else {
+            neArr.push(item.slice(0, item.indexOf("_ne")), query[item]);
+        }
+    });
+
     const populate = req.query["_expand"];
 
     let sortOpt = {};
@@ -42,8 +58,20 @@ export const list = async (req, res) => {
         });
     }
 
+    const start = req.query["_start"];
+    const limit = req.query["_limit"];
+
     try {
-        const news = await News.find({}).select("-__v").populate(populate).sort(sortOpt).exec();
+        const news = await
+            News
+            .find(filter)
+            .select("-__v")
+            .populate(populate)
+            .where(neArr[0] || " ").ne(neArr[1] || "")
+            .skip(start)
+            .limit(limit)
+            .sort(sortOpt)
+            .exec();
         res.json(news);
     } catch (error) {
         res.status(400).json({

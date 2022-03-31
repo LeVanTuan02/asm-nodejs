@@ -17,9 +17,10 @@ export const create = async (req, res) => {
 
 export const read = async (req, res) => {
     const filter = { slug: req.params.slug };
+    const populate = req.query["_expand"];
 
     try {
-        const product = await Product.findOne(filter).select("-__v").exec();
+        const product = await Product.findOne(filter).select("-__v").populate(populate).exec();
         res.json(product);
     } catch (error) {
         res.status(400).json({
@@ -42,8 +43,35 @@ export const list = async (req, res) => {
         });
     }
 
+    const start = req.query["_start"];
+    const limit = req.query["_limit"];
+
+    const filter = {};
+
+    const neArr = [];
+
+    const { _expand, _sort, _order, ...query } = req.query;
+    const queryArr = Object.keys(query);
+    queryArr.forEach(item => {
+        if (item.includes("like")) {
+            filter[item.slice(0, item.indexOf("_"))] = new RegExp(req.query[item], "i");
+        } else if (item.includes("_ne")) {
+            neArr.push(item.slice(0, item.indexOf("_ne")), query[item]);
+        } else {
+            filter[item] = req.query[item];
+        }
+    });
+
     try {
-        const products = await Product.find({}).select("-__v").populate(populate).sort(sortOpt).exec();
+        const products = await Product
+            .find(filter)
+            .select("-__v")
+            .populate(populate)
+            .where(neArr[0] || " ").ne(neArr[1] || "")
+            .skip(start)
+            .limit(limit)
+            .sort(sortOpt)
+            .exec();
         res.json(products);
     } catch (error) {
         res.status(400).json({
