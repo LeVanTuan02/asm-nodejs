@@ -16,6 +16,8 @@ import newsRouter from "./routes/news";
 import contactRouter from "./routes/contact";
 import userRouter from "./routes/users";
 import authRouter from "./routes/auth";
+import orderRouter from "./routes/order";
+import orderDetailRouter from "./routes/orderDetail";
 
 const app = express();
 
@@ -36,6 +38,8 @@ app.use("/api", newsRouter);
 app.use("/api", contactRouter);
 app.use("/api", userRouter);
 app.use("/api", authRouter);
+app.use("/api", orderRouter);
+app.use("/api", orderDetailRouter);
 
 // connect db
 mongoose.connect("mongodb://localhost:27017/asm-nodejs")
