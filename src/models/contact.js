@@ -28,4 +28,6 @@ const contactSchema = new Schema({
     }
 }, { timestamps: true });
 
+contactSchema.index({'$**': 'text'});
+
 export default model("Contact", contactSchema);
