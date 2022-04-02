@@ -85,4 +85,6 @@ userSchema.pre("findOneAndUpdate", function (next) {
     next();
 });
 
+userSchema.index({'$**': 'text'});
+
 export default model("User", userSchema);

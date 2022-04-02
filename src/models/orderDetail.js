@@ -44,4 +44,6 @@ const orderSchema = new Schema({
     },
 }, { timestamps: true });
 
+orderSchema.index({'$**': 'text'});
+
 export default model("OrderDetail", orderSchema);

@@ -32,20 +32,6 @@ export const read = async (req, res) => {
 };
 
 export const list = async (req, res) => {
-    const filter = {};
-
-    const neArr = [];
-
-    const { _expand, _sort, _order, ...query } = req.query;
-    const queryArr = Object.keys(query);
-    queryArr.forEach(item => {
-        if (!item.includes("_ne")) {
-            filter[item] = query[item];
-        } else {
-            neArr.push(item.slice(0, item.indexOf("_ne")), query[item]);
-        }
-    });
-
     const populate = req.query["_expand"];
 
     let sortOpt = {};
@@ -61,13 +47,53 @@ export const list = async (req, res) => {
     const start = req.query["_start"];
     const limit = req.query["_limit"];
 
+    const filter = {};
+
+    const { _expand, _sort, _order, ...query } = req.query;
+    const queryArr = Object.keys(query);
+    queryArr.forEach(item => {
+        if (item.includes("like")) {
+            const objectKey = item.slice(0, item.indexOf("_"));
+
+            if (Object.hasOwn(filter, objectKey)) {
+                filter[objectKey]["$in"].push(new RegExp(req.query[item], "i"));
+            } else {
+                filter[objectKey] = {$in: [new RegExp(req.query[item], "i")]};
+            }
+        } else if (item.includes("_ne")) {
+            filter[item.slice(0, item.indexOf("_ne"))] = { $nin: query[item] };
+        } else if (item.includes("_gte")) {
+            const objectKey = item.slice(0, item.indexOf("_gte"));
+
+            if (Object.hasOwn(filter, objectKey)) {
+                filter[objectKey]["$gte"] = query[item];
+            } else {
+                filter[objectKey] = { $gte: query[item] };
+            }
+        } else if (item.includes("_lte")) {
+            const objectKey = item.slice(0, item.indexOf("_lte"));
+
+            if (Object.hasOwn(filter, objectKey)) {
+                filter[objectKey]["$lte"] = query[item];
+            } else {
+                filter[objectKey] = { $lte: query[item] };
+            }
+        } else if (item === "q" && query["q"]) {
+            filter["$text"] = {"$search": `"${query["q"]}"`};
+        } else {
+            if (Object.hasOwn(filter, item)) {
+                filter[item]["$in"].push(query[item]);
+            } else {
+                filter[item] = {$in: [query[item]]};
+            }
+        }
+    });
+
     try {
-        const news = await
-            News
+        const news = await News
             .find(filter)
             .select("-__v")
             .populate(populate)
-            .where(neArr[0] || " ").ne(neArr[1] || "")
             .skip(start)
             .limit(limit)
             .sort(sortOpt)

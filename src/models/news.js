@@ -34,4 +34,6 @@ const categorySchema = new Schema({
     }
 }, { timestamps: true });
 
+categorySchema.index({'$**': 'text'});
+
 export default model("News", categorySchema);

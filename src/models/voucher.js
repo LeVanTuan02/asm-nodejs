@@ -36,4 +36,6 @@ const voucherSchema = new Schema({
     }
 }, { timestamps: true });
 
+voucherSchema.index({'$**': 'text'});
+
 export default model("Voucher", voucherSchema);

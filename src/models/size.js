@@ -13,4 +13,6 @@ const sizeSchema = new Schema({
     },
 }, { timestamps: true });
 
+sizeSchema.index({'$**': 'text'});
+
 export default model("Size", sizeSchema);

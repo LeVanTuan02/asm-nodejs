@@ -32,4 +32,6 @@ const storeSchema = new Schema({
     }
 }, { timestamps: true });
 
+storeSchema.index({'$**': 'text'});
+
 export default model("Store", storeSchema);

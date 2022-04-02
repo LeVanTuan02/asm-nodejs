@@ -22,9 +22,10 @@ export const create = async (req, res) => {
 
 export const read = async (req, res) => {
     const filter = { _id: req.params.id };
+    const populate = req.query["_expand"];
 
     try {
-        const user = await User.findOne(filter).select("-__v").exec();
+        const user = await User.findOne(filter).select("-__v").populate(populate).exec();
         res.json(user);
     } catch (error) {
         res.status(400).json({
@@ -35,6 +36,8 @@ export const read = async (req, res) => {
 };
 
 export const list = async (req, res) => {
+    const populate = req.query["_expand"];
+
     let sortOpt = {};
     if (req.query["_sort"]) {
         const sortArr = req.query["_sort"].split(",");
@@ -45,8 +48,60 @@ export const list = async (req, res) => {
         });
     }
 
+    const start = req.query["_start"];
+    const limit = req.query["_limit"];
+
+    const filter = {};
+
+    const { _expand, _sort, _order, ...query } = req.query;
+    const queryArr = Object.keys(query);
+    queryArr.forEach(item => {
+        if (item.includes("like")) {
+            const objectKey = item.slice(0, item.indexOf("_"));
+
+            if (Object.hasOwn(filter, objectKey)) {
+                filter[objectKey]["$in"].push(new RegExp(req.query[item], "i"));
+            } else {
+                filter[objectKey] = {$in: [new RegExp(req.query[item], "i")]};
+            }
+        } else if (item.includes("_ne")) {
+            filter[item.slice(0, item.indexOf("_ne"))] = { $nin: query[item] };
+        } else if (item.includes("_gte")) {
+            const objectKey = item.slice(0, item.indexOf("_gte"));
+
+            if (Object.hasOwn(filter, objectKey)) {
+                filter[objectKey]["$gte"] = query[item];
+            } else {
+                filter[objectKey] = { $gte: query[item] };
+            }
+        } else if (item.includes("_lte")) {
+            const objectKey = item.slice(0, item.indexOf("_lte"));
+
+            if (Object.hasOwn(filter, objectKey)) {
+                filter[objectKey]["$lte"] = query[item];
+            } else {
+                filter[objectKey] = { $lte: query[item] };
+            }
+        } else if (item === "q" && query["q"]) {
+            filter["$text"] = {"$search": `"${query["q"]}"`};
+        } else {
+            if (Object.hasOwn(filter, item)) {
+                filter[item]["$in"].push(query[item]);
+            } else {
+                filter[item] = {$in: [query[item]]};
+            }
+        }
+    });
+
     try {
-        const users = await User.find({}).select("-__v").sort(sortOpt).exec();
+        const users = await User
+            .find(filter)
+            .select("-__v")
+            .populate(populate)
+            .skip(start)
+            .limit(limit)
+            .sort(sortOpt)
+            .exec();
         res.json(users);
     } catch (error) {
         res.status(400).json({

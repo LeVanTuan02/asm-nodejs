@@ -12,4 +12,6 @@ const toppingSchema = new Schema({
     }
 }, { timestamps: true });
 
+toppingSchema.index({'$**': 'text'});
+
 export default model("Topping", toppingSchema);

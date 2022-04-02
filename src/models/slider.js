@@ -20,4 +20,6 @@ const slideSchema = new Schema({
     },
 }, { timestamps: true });
 
+slideSchema.index({'$**': 'text'});
+
 export default model("Slide", slideSchema);
