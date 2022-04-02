@@ -18,6 +18,7 @@ import userRouter from "./routes/users";
 import authRouter from "./routes/auth";
 import orderRouter from "./routes/order";
 import orderDetailRouter from "./routes/orderDetail";
+import addressRouter from "./routes/address";
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.use("/api", userRouter);
 app.use("/api", authRouter);
 app.use("/api", orderRouter);
 app.use("/api", orderDetailRouter);
+app.use("/api", addressRouter);
 
 // connect db
 mongoose.connect("mongodb://localhost:27017/asm-nodejs")
