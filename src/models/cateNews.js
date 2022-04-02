@@ -14,4 +14,6 @@ const cateNewsSchema = new Schema({
     },
 }, { timestamps: true });
 
+cateNewsSchema.index({'$**': 'text'});
+
 export default model("CateNews", cateNewsSchema);
