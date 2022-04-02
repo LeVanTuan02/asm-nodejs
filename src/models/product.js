@@ -40,4 +40,6 @@ const productSchema = new Schema({
     }
 }, { timestamps: true });
 
+productSchema.index({'$**': 'text'});
+
 export default model("Product", productSchema);

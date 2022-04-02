@@ -24,7 +24,7 @@ export const read = async (req, res) => {
         res.json(product);
     } catch (error) {
         res.status(400).json({
-            message: "Không tìm thấy danh mục",
+            message: "Không tìm thấy sản phẩm",
             error
         });
     }
@@ -48,17 +48,43 @@ export const list = async (req, res) => {
 
     const filter = {};
 
-    const neArr = [];
-
     const { _expand, _sort, _order, ...query } = req.query;
     const queryArr = Object.keys(query);
     queryArr.forEach(item => {
         if (item.includes("like")) {
-            filter[item.slice(0, item.indexOf("_"))] = new RegExp(req.query[item], "i");
+            const objectKey = item.slice(0, item.indexOf("_"));
+
+            if (Object.hasOwn(filter, objectKey)) {
+                filter[objectKey]["$in"].push(new RegExp(req.query[item], "i"));
+            } else {
+                filter[objectKey] = {$in: [new RegExp(req.query[item], "i")]};
+            }
         } else if (item.includes("_ne")) {
-            neArr.push(item.slice(0, item.indexOf("_ne")), query[item]);
+            filter[item.slice(0, item.indexOf("_ne"))] = { $nin: query[item] };
+        } else if (item.includes("_gte")) {
+            const objectKey = item.slice(0, item.indexOf("_gte"));
+
+            if (Object.hasOwn(filter, objectKey)) {
+                filter[objectKey]["$gte"] = query[item];
+            } else {
+                filter[objectKey] = { $gte: query[item] };
+            }
+        } else if (item.includes("_lte")) {
+            const objectKey = item.slice(0, item.indexOf("_lte"));
+
+            if (Object.hasOwn(filter, objectKey)) {
+                filter[objectKey]["$lte"] = query[item];
+            } else {
+                filter[objectKey] = { $lte: query[item] };
+            }
+        } else if (item === "q" && query["q"]) {
+            filter["$text"] = {"$search": `"${query["q"]}"`};
         } else {
-            filter[item] = req.query[item];
+            if (Object.hasOwn(filter, item)) {
+                filter[item]["$in"].push(query[item]);
+            } else {
+                filter[item] = {$in: [query[item]]};
+            }
         }
     });
 
@@ -67,7 +93,6 @@ export const list = async (req, res) => {
             .find(filter)
             .select("-__v")
             .populate(populate)
-            .where(neArr[0] || " ").ne(neArr[1] || "")
             .skip(start)
             .limit(limit)
             .sort(sortOpt)
@@ -75,7 +100,7 @@ export const list = async (req, res) => {
         res.json(products);
     } catch (error) {
         res.status(400).json({
-            message: "Không tìm thấy danh mục",
+            message: "Không tìm thấy sản phẩm",
             error
         });
     }
@@ -94,7 +119,7 @@ export const update = async (req, res) => {
         res.json(product);
     } catch (error) {
         res.status(400).json({
-            message: "Cập nhật danh mục thất bại",
+            message: "Cập nhật sản phẩm thất bại",
             error
         });
     }
@@ -108,7 +133,7 @@ export const remove = async (req, res) => {
         res.json(product);
     } catch (error) {
         res.status(400).json({
-            message: "Xóa danh mục không thành công",
+            message: "Xóa sản phẩm không thành công",
             error
         });
     }
