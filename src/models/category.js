@@ -14,4 +14,6 @@ const categorySchema = new Schema({
     image: String
 }, { timestamps: true });
 
+categorySchema.index({'$**': 'text'});
+
 export default model("Category", categorySchema);
