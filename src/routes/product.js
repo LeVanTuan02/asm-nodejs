@@ -8,7 +8,7 @@ const router = Router();
 router.post("/products/:userId", requireSignin, isAuth, isAdmin, create);
 router.get("/products/:slug", read);
 router.get("/products", list);
-router.put("/products/:id/:userId", requireSignin, isAuth, isAdmin, update);
+router.put("/products/:id", update);
 router.delete("/products/:id/:userId", requireSignin, isAuth, isAdmin, remove);
 
 router.param("userId", userById);
