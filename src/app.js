@@ -21,6 +21,7 @@ import orderDetailRouter from "./routes/orderDetail";
 import addressRouter from "./routes/address";
 import cmtRouter from "./routes/comment";
 import ratingRouter from "./routes/rating";
+import favoritesRouter from "./routes/favoritesProduct";
 
 const app = express();
 
@@ -46,6 +47,7 @@ app.use("/api", orderDetailRouter);
 app.use("/api", addressRouter);
 app.use("/api", cmtRouter);
 app.use("/api", ratingRouter);
+app.use("/api", favoritesRouter);
 
 // connect db
 mongoose.connect("mongodb://localhost:27017/asm-nodejs")
