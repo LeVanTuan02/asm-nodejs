@@ -125,6 +125,22 @@ export const update = async (req, res) => {
     }
 };
 
+export const clientUpdate = async (req, res) => {
+    const filter = { _id: req.params.id };
+    const { view, favorites } = req.body;
+    const options = { new: true };
+
+    try {
+        const product = await Product.findOneAndUpdate(filter, { view, favorites }, options).exec();
+        res.json(product);
+    } catch (error) {
+        res.status(400).json({
+            message: "Cập nhật sản phẩm thất bại",
+            error
+        });
+    }
+};
+
 export const remove = async (req, res) => {
     const filter = { _id: req.params.id };
 
