@@ -8,8 +8,8 @@ const router = Router();
 router.post("/products/:userId", requireSignin, isAuth, isAdmin, create);
 router.get("/products/:slug", read);
 router.get("/products", list);
-router.put("/products/:id", requireSignin, isAuth, isAdmin, update);
-router.put("/products/userUpdate/:id", clientUpdate);
+router.put("/products/:id/:userId", requireSignin, isAuth, isAdmin, update);
+router.patch("/products/userUpdate/:id", clientUpdate);
 router.delete("/products/:id/:userId", requireSignin, isAuth, isAdmin, remove);
 
 router.param("userId", userById);
