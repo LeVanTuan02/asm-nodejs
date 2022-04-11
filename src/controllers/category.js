@@ -1,5 +1,6 @@
 import slugify from "slugify";
 import CategoryModel from "../models/category";
+import Product from "../models/product";
 
 export const create = async (req, res) => {
     req.body.slug = slugify(req.body.name);
@@ -97,7 +98,17 @@ export const list = async (req, res) => {
             .limit(limit)
             .sort(sortOpt)
             .exec();
-        res.json(categories);
+
+        const newCates = [];
+        for await (let cate of categories) {
+            const products = await Product.find({ categoryId: cate._id }).exec();
+            const { _doc } = cate;
+            newCates.push({
+                ..._doc,
+                products
+            })
+        }
+        res.json(newCates);
     } catch (error) {
         res.status(400).json({
             message: "Không tìm thấy danh mục",
