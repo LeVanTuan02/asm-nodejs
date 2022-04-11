@@ -43,3 +43,58 @@ const productSchema = new Schema({
 productSchema.index({'$**': 'text'});
 
 export default model("Product", productSchema);
+
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *   Products:
+ *    type: object
+ *    properties:
+ *      _id:
+ *        type: string
+ *      name:
+ *        type: string
+ *      image:
+ *        type: string
+ *      price:
+ *        type: number
+ *      description:
+ *        type: string
+ *      status:
+ *        type: number
+ *        default: 0
+ *      view:
+ *        type: number
+ *        default: 0
+ *      favorites:
+ *        type: number
+ *        default: 0
+ *      categoryId:
+ *        type: string
+ *      slug:
+ *        type: string
+ *    required:
+ *      - name
+ *      - image
+ *      - price
+ *      - categoryId
+ *    example:
+ *      _id: _fdakfakhfa
+ *      name: Trà sữa ô long bạch kim
+ *      image: https://res.cloudinary.com/levantuan/image/upload/v1645172924/assignment-js/ntnmsjdifbepbbbelzvq.png
+ *      price: 20000
+ *      description: Mô tả sản phẩm
+ *      status: 0
+ *      view: 10
+ *      favorites: 20
+ *      categoryId: _fdakfakhxss
+ *      slug: tra-sua-o-long-bach-kim
+ */
+
+/**
+ * @swagger
+ * tags:
+ *  name: Products
+ *  description: API dành cho Product
+ */

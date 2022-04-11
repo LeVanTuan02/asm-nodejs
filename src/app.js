@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
+import swaggerJsDoc from "swagger-jsdoc";
+import swaggerUI from "swagger-ui-express";
 
 // routes
 import categoryRouter from "./routes/category";
@@ -25,7 +27,27 @@ import favoritesRouter from "./routes/favoritesProduct";
 import orderLogRouter from "./routes/orderLogs";
 import sendMailRouter from "./routes/sendMail";
 
+const options = {
+    definition: {
+        openapi: "3.0.0",
+        info: {
+            title: "Library API",
+            version: "1.0.0",
+            description: "A simple Express Library API"
+        },
+        servers: [
+            {
+                url: "http://localhost:8080"
+            }
+        ]
+    },
+    apis: ["./src/controllers/*.js", "./src/models/*.js", "./src/routes/*.js"]
+};
+  
+const specs = swaggerJsDoc(options);
+
 const app = express();
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 
 // middleware
 app.use(express.json());
