@@ -37,7 +37,7 @@ const options = {
         },
         servers: [
             {
-                url: "http://localhost:8080"
+                url: "https://asm-nodejs.vercel.app"
             }
         ]
     },
@@ -76,7 +76,7 @@ app.use("/api", orderLogRouter);
 app.use("/api", sendMailRouter);
 
 // connect db
-mongoose.connect("mongodb://localhost:27017/asm-nodejs")
+mongoose.connect("mongodb+srv://tuandemo:yvzbQJr7wi7bVWP@tuandemo.4n5kr.mongodb.net/asm-nodejs")
     .then(() => console.log("Connected to MongoDB"))
     .catch(error => console.log(error));
 
