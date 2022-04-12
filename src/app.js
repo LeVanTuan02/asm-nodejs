@@ -37,7 +37,7 @@ const options = {
         },
         servers: [
             {
-                url: "https://asm-nodejs.vercel.app"
+                url: "https://yotea-nodejs.herokuapp.com"
             }
         ]
     },
@@ -81,5 +81,5 @@ mongoose.connect("mongodb+srv://tuandemo:yvzbQJr7wi7bVWP@tuandemo.4n5kr.mongodb.
     .catch(error => console.log(error));
 
 // connect
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`App is running on port: ${PORT}`));

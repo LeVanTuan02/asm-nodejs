@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./src/app.js --exec babel-node -e js",
+    "start": "nodemon ./src/app.js --exec babel-node -e js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -22,10 +22,10 @@
     "nodemailer": "^6.7.3",
     "slugify": "^1.6.5",
     "swagger-jsdoc": "^6.2.0",
-    "swagger-ui-express": "^4.3.0"
+    "swagger-ui-express": "^4.3.0",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
-    "morgan": "^1.10.0",
     "nodemon": "^2.0.15"
   }
 }
