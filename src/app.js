@@ -39,7 +39,23 @@ const options = {
             {
                 url: "https://yotea-nodejs.herokuapp.com"
             }
-        ]
+        ],
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: "http",
+                    scheme: "bearer",
+                    in: "header",
+                    description: "Nhập mã token",
+                    bearerFormat: "JWT"
+                },
+            }
+        },
+        security: [
+            {
+                bearerAuth: []
+            }
+        ],
     },
     apis: ["./src/controllers/*.js", "./src/models/*.js", "./src/routes/*.js"]
 };

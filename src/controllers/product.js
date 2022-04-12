@@ -15,6 +15,7 @@ import Product from "../models/product";
  *       required: true
  *       schema:
  *         type: string
+ *         example: 623fec6776be914e8a89297d
  *   requestBody:
  *    required: true
  *    content:
@@ -24,6 +25,10 @@ import Product from "../models/product";
  *   responses:
  *    200:
  *     description: Tạo sản phẩm thành công
+ *     content:
+ *       application/json:
+ *        schema:
+ *          $ref: '#/components/schemas/Products'
  *    400:
  *     description: Tạo sản phẩm không thành công
  */
@@ -52,12 +57,16 @@ export const create = async (req, res) => {
  *     - in: path
  *       name: slug
  *       description: Slug sản phẩm
- *       schema: 
+ *       schema:
  *        type: string
  *       required: true
  *    responses:
  *     200:
  *      description: Trả về thông tin sản phẩm dựa trên slug
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: "#/components/schemas/Products"
  *     404:
  *      description: Không tìm thấy sản phẩm
  */
@@ -171,7 +180,7 @@ export const list = async (req, res) => {
 /**
  * @swagger
  * paths:
- *  /api/products/{id}:
+ *  /api/products/{id}/{userId}:
  *   put:
  *    tags: [Products]
  *    summary: Cập nhật thông tin sản phẩm
@@ -183,6 +192,13 @@ export const list = async (req, res) => {
  *       schema: 
  *        type: string
  *       required: true
+ *     - in: path
+ *       name: userId
+ *       description: Id tài khoản đã đăng nhập
+ *       required: true
+ *       schema:
+ *         type: string
+ *         example: 623fec6776be914e8a89297d
  *    requestBody:
  *      required: true
  *      content:
@@ -191,7 +207,11 @@ export const list = async (req, res) => {
  *            $ref: "#/components/schemas/Products"
  *    responses:
  *     200:
- *      description: Trả về thông tin sản phẩm vừa cập nhật
+ *      description: Trả về thông tin sản phẩm đã được cập nhật
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: "#/components/schemas/Products"
  *     404:
  *      description: Cập nhật sản phẩm không thành công
  */
@@ -214,6 +234,41 @@ export const update = async (req, res) => {
     }
 };
 
+/**
+ * @swagger
+ * paths:
+ *  /api/products/userUpdate/{id}:
+ *    patch:
+ *      tags: [Products]
+ *      summary: Cập nhật lượt xem, lượt yêu thích sản phẩm
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          description: Id sản phẩm cần cập nhật
+ *          schema:
+ *            type: string
+ *            example: "62496b4ddc6d278b7a1b5c81"
+ *          required: true
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                view:
+ *                  type: number
+ *                favorites:
+ *                  type: number
+ *              example:
+ *                view: 100
+ *                favorites: 200
+ *      responses:
+ *        200:
+ *          description: Trả về thông tin sản phẩm vừa cập nhật
+ *        400:
+ *          description: Cập nhật sản phẩm thất bại
+*/
 export const clientUpdate = async (req, res) => {
     const filter = { _id: req.params.id };
     const { view, favorites } = req.body;
@@ -233,7 +288,7 @@ export const clientUpdate = async (req, res) => {
 /**
  * @swagger
  * paths:
- *  /api/products/{id}:
+ *  /api/products/{id}/{userId}:
  *   delete:
  *    tags: [Products]
  *    summary: Xóa sản phẩm
@@ -245,9 +300,20 @@ export const clientUpdate = async (req, res) => {
  *       schema: 
  *        type: string
  *       required: true
+ *     - in: path
+ *       name: userId
+ *       description: Id tài khoản đã đăng nhập
+ *       required: true
+ *       schema:
+ *         type: string
+ *         example: 623fec6776be914e8a89297d
  *    responses:
  *     200:
  *      description: Trả về thông tin sản phẩm vừa xóa
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: "#/components/schemas/Products"
  *     404:
  *      description: Xóa sản phẩm không thành công
  */

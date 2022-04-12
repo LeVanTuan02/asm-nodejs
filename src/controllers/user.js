@@ -1,5 +1,37 @@
 import User from "../models/user";
 
+/**
+ * @swagger
+ * paths:
+ *  /api/users/{userId}:
+ *    post:
+ *      tags: [Users]
+ *      summary: Tạo tài khoản người dùng
+ *      description: Bắt buộc đăng nhập
+ *      parameters:
+ *        - in: path
+ *          name: userId
+ *          description: Id tài khoản đã đăng nhập
+ *          required: true
+ *          schema:
+ *            type: string
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/Users"
+ *      responses:
+ *        200:
+ *          description: Tạo tài khoản thành công
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: string
+ *                $ref: "#/components/schemas/Users"
+ *        400:
+ *          description: Tạo tài khoản không thành công
+*/
 export const create = async (req, res) => {
     try {
         const exitsUser = await User.findOne({ email: req.body.email }).exec();
@@ -20,6 +52,30 @@ export const create = async (req, res) => {
     }
 };
 
+/**
+ * @swagger
+ * paths:
+ *  /api/users/{id}:
+ *    get:
+ *      tags: [Users]
+ *      summary: Trả về thông tin một tài khoản
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          description: Id tài khoản
+ *          required: true
+ *          schema:
+ *            type: string
+ *      responses:
+ *        200:
+ *          description: Trả về thông tin tài khoản dựa trên Id
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: "#/components/schemas/Users"
+ *        400:
+ *          description: Không tìm thấy tài khoản
+*/
 export const read = async (req, res) => {
     const filter = { _id: req.params.id };
     const populate = req.query["_expand"];
@@ -35,6 +91,24 @@ export const read = async (req, res) => {
     }
 };
 
+/**
+ * @swagger
+ * paths:
+ *  /api/users:
+ *    get:
+ *      tags: [Users]
+ *      summary: Lấy danh sách tài khoản
+ *      responses:
+ *        200:
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items:
+ *                  $ref: "#/components/schemas/Users"
+ *        400:
+ *          description: Không tìm thấy tài khoản
+*/
 export const list = async (req, res) => {
     const populate = req.query["_expand"];
 
@@ -111,6 +185,43 @@ export const list = async (req, res) => {
     }
 };
 
+/**
+ * @swagger
+ * paths:
+ *  /api/users/{id}/{userId}:
+ *    put:
+ *      tags: [Users]
+ *      summary: Cập nhật tài khoản
+ *      description: Bắt buộc đăng nhập
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          description: Id tài khoản cần cập nhật
+ *          required: true
+ *          schema:
+ *            type: string
+ *        - in: path
+ *          name: userId
+ *          description: Id tài khoản đã đăng nhập
+ *          required: true
+ *          schema:
+ *            type: string
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/Users"
+ *      responses:
+ *        200:
+ *          description: Trả về thông tin tài khoản vừa cập nhật
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: "#/components/schemas/Users"
+ *        400:
+ *          description: Cập nhật sản phẩm không thành công
+*/
 export const update = async (req, res) => {
     const filter = { _id: req.params.id || req.params.myId };
     const update = req.body;
@@ -128,6 +239,38 @@ export const update = async (req, res) => {
     }
 };
 
+
+/**
+ * @swagger
+ * paths:
+ *  /api/users/{id}/{userId}:
+ *    delete:
+ *      tags: [Users]
+ *      summary: Xóa tài khoản
+ *      description: Bắt buộc đăng nhập
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          description: Id tài khoản cần xóa
+ *          required: true
+ *          schema:
+ *            type: string
+ *        - in: path
+ *          name: userId
+ *          description: Id tài khoản đã đăng nhập
+ *          required: true
+ *          schema:
+ *            type: string
+ *      responses:
+ *        200:
+ *          description: Trả về thông tin tài khoản vừa xóa
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: "#/components/schemas/Users"
+ *        400:
+ *          description: Xóa tài khoản không thành công
+*/
 export const remove = async (req, res) => {
     const filter = { _id: req.params.id };
 

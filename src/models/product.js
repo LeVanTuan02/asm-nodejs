@@ -80,7 +80,6 @@ export default model("Product", productSchema);
  *      - price
  *      - categoryId
  *    example:
- *      _id: _fdakfakhfa
  *      name: Trà sữa ô long bạch kim
  *      image: https://res.cloudinary.com/levantuan/image/upload/v1645172924/assignment-js/ntnmsjdifbepbbbelzvq.png
  *      price: 20000
